@@ -11,8 +11,6 @@ import org.junit.Test;
 import de.jilocasin.nearestneighbour.kdtree.KdPoint;
 import de.jilocasin.nearestneighbour.kdtree.KdTree;
 import de.jilocasin.nearestneighbour.kdtree.generator.RandomDoubleKdTreeGenerator;
-import de.jilocasin.nearestneighbour.nnsolver.NNSolverInterruptedException;
-import de.jilocasin.nearestneighbour.nnsolver.NNSolverOrchestrator;
 
 public class NNSolverOrchestratorTest {
 	private static final int POINT_COUNT = 100_000;
@@ -35,7 +33,7 @@ public class NNSolverOrchestratorTest {
 	}
 
 	@Test
-	public void testFindNearestPoints() {
+	public void testFindNearestPointsFixedWorkerThreadCount() {
 		final int dimensionCount = 3;
 		final int workerThreadsCount = 10;
 
@@ -46,6 +44,26 @@ public class NNSolverOrchestratorTest {
 
 		final NNSolverOrchestrator<Double> orchestrator = new NNSolverOrchestrator<>(tree, workerThreadsCount);
 
+		performOrchestratorTest(orchestrator, inputPoints);
+	}
+
+	@Test
+	public void testFindNearestPointsDynamicWorkerThreadCount() {
+		final int dimensionCount = 3;
+		final int workerThreadsCount = 10;
+
+		final RandomDoubleKdTreeGenerator treeGenerator = new RandomDoubleKdTreeGenerator();
+
+		final List<KdPoint<Double>> inputPoints = treeGenerator.generatePoints(dimensionCount, POINT_COUNT);
+		final KdTree<Double> tree = new KdTree<>(dimensionCount, inputPoints);
+
+		final NNSolverOrchestrator<Double> orchestrator = new NNSolverOrchestrator<>(tree);
+
+		performOrchestratorTest(orchestrator, inputPoints);
+	}
+
+	private void performOrchestratorTest(final NNSolverOrchestrator<Double> orchestrator,
+	        final List<KdPoint<Double>> inputPoints) {
 		// Request the result from the orchestrator.
 
 		final List<KdPoint<Double>> resultPoints = orchestrator.findNearestPoints(inputPoints);

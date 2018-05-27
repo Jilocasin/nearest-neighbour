@@ -10,6 +10,16 @@ public class NNSolverOrchestrator<T extends Number & Comparable<T>> {
 	private final KdTree<T> tree;
 	private final int workerThreadsCount;
 
+	/**
+	 * Creates a solver orchestrator with its worker count initialized to the number
+	 * of available processors on the local system.
+	 */
+	public NNSolverOrchestrator(final KdTree<T> tree) {
+		this.tree = tree;
+		this.workerThreadsCount = Runtime.getRuntime().availableProcessors();
+		;
+	}
+
 	public NNSolverOrchestrator(final KdTree<T> tree, final int workerThreadsCount) {
 		this.tree = tree;
 		this.workerThreadsCount = workerThreadsCount;
