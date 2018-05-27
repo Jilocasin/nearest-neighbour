@@ -16,16 +16,15 @@ public class NNSolverOrchestratorTest {
 	private static final int POINT_COUNT = 100_000;
 
 	@Test(expected = NNSolverInterruptedException.class)
-	public void testInterruptThingy() {
+	public void testInterruptException() {
 		final int dimensionCount = 3;
-		final int workerThreadsCount = 10;
 
 		final RandomDoubleKdTreeGenerator treeGenerator = new RandomDoubleKdTreeGenerator();
 
 		final List<KdPoint<Double>> inputPoints = treeGenerator.generatePoints(dimensionCount, POINT_COUNT);
-		final KdTree<Double> tree = new KdTree<>(dimensionCount, inputPoints);
+		final KdTree<Double> tree = new KdTree<>(inputPoints);
 
-		final NNSolverOrchestrator<Double> orchestrator = new NNSolverOrchestrator<>(tree, workerThreadsCount);
+		final NNSolverOrchestrator<Double> orchestrator = new NNSolverOrchestrator<>(tree);
 
 		Thread.currentThread().interrupt();
 
@@ -40,7 +39,7 @@ public class NNSolverOrchestratorTest {
 		final RandomDoubleKdTreeGenerator treeGenerator = new RandomDoubleKdTreeGenerator();
 
 		final List<KdPoint<Double>> inputPoints = treeGenerator.generatePoints(dimensionCount, POINT_COUNT);
-		final KdTree<Double> tree = new KdTree<>(dimensionCount, inputPoints);
+		final KdTree<Double> tree = new KdTree<>(inputPoints);
 
 		final NNSolverOrchestrator<Double> orchestrator = new NNSolverOrchestrator<>(tree, workerThreadsCount);
 
@@ -50,12 +49,11 @@ public class NNSolverOrchestratorTest {
 	@Test
 	public void testFindNearestPointsDynamicWorkerThreadCount() {
 		final int dimensionCount = 3;
-		final int workerThreadsCount = 10;
 
 		final RandomDoubleKdTreeGenerator treeGenerator = new RandomDoubleKdTreeGenerator();
 
 		final List<KdPoint<Double>> inputPoints = treeGenerator.generatePoints(dimensionCount, POINT_COUNT);
-		final KdTree<Double> tree = new KdTree<>(dimensionCount, inputPoints);
+		final KdTree<Double> tree = new KdTree<>(inputPoints);
 
 		final NNSolverOrchestrator<Double> orchestrator = new NNSolverOrchestrator<>(tree);
 

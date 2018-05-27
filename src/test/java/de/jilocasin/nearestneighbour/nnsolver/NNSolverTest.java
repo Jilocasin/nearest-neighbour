@@ -11,7 +11,6 @@ import org.junit.Test;
 import de.jilocasin.nearestneighbour.kdtree.KdPoint;
 import de.jilocasin.nearestneighbour.kdtree.KdTree;
 import de.jilocasin.nearestneighbour.kdtree.generator.RandomDoubleKdTreeGenerator;
-import de.jilocasin.nearestneighbour.nnsolver.NNSolver;
 
 public class NNSolverTest {
 	private static final int POINT_COUNT = 100_000;
@@ -38,8 +37,6 @@ public class NNSolverTest {
 		// we need to use explicit data to make sure the returned nearest point is
 		// actually correct.
 
-		final int dimensionCount = 2;
-
 		inputPoints = new ArrayList<>();
 
 		inputPoints.add(new KdPoint<>(0.0, 0.0));
@@ -49,7 +46,7 @@ public class NNSolverTest {
 		inputPoints.add(new KdPoint<>(-40.0, -40.0));
 		inputPoints.add(new KdPoint<>(0.01, 0.01));
 
-		tree = new KdTree<>(dimensionCount, inputPoints);
+		tree = new KdTree<>(inputPoints);
 		solver = new NNSolver<>(tree);
 
 		final List<KdPoint<Double>> nearestToIndex = new ArrayList<>();
@@ -75,7 +72,7 @@ public class NNSolverTest {
 		final RandomDoubleKdTreeGenerator treeGenerator = new RandomDoubleKdTreeGenerator();
 
 		inputPoints = treeGenerator.generatePoints(dimensionCount, POINT_COUNT);
-		tree = new KdTree<>(dimensionCount, inputPoints);
+		tree = new KdTree<>(inputPoints);
 		solver = new NNSolver<>(tree);
 
 		for (final KdPoint<Double> inputPoint : inputPoints) {

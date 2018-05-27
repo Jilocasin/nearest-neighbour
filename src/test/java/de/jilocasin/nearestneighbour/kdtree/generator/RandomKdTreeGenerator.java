@@ -8,8 +8,8 @@ import de.jilocasin.nearestneighbour.kdtree.KdTree;
 
 public abstract class RandomKdTreeGenerator<T extends Number & Comparable<T>> {
 
-	public KdTree<T> generate(final int dimensionCount, final int pointCountt) {
-		return new KdTree<>(dimensionCount, generatePoints(dimensionCount, pointCountt));
+	public KdTree<T> generate(final int dimensionCount, final int pointCount) {
+		return new KdTree<>(generatePoints(dimensionCount, pointCount));
 	}
 
 	public List<KdPoint<T>> generatePoints(final int dimensionCount, final int pointCount) {

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import de.jilocasin.nearestneighbour.kdtree.exception.InvalidKdPointDimensionsException;
 import de.jilocasin.nearestneighbour.kdtree.exception.InvalidKdPointCountException;
 import de.jilocasin.nearestneighbour.kdtree.exception.KdTreeException;
 
@@ -24,40 +23,23 @@ public class KdTree<T extends Number & Comparable<T>> {
 	public final KdNode<T> rootNode;
 
 	/**
-	 * Creates a new KdTree instance based on the provided number of dimensions and
-	 * data points.
+	 * Creates a new KdTree instance based on the provided data points. The number
+	 * of axis values of the first data point determines the number of dimensions.
 	 * 
-	 * @param dimensionCount
-	 *            the number of dimensions of the new tree.
 	 * @param points
 	 *            the points to include in the tree data.
 	 * @throws InvalidKdPointCountException
 	 *             if the provided list of points was null or did not contain at
 	 *             least one point.
-	 * @throws InvalidKdPointDimensionsException
-	 *             if the quick point axis value check fails. The check is only
-	 *             performed for the first point in the provided list and tests
-	 *             whether the number of axis values for this point matches the
-	 *             provided dimension count of the tree.
 	 */
-	public KdTree(final int dimensionCount, final List<KdPoint<T>> points) throws KdTreeException {
+	public KdTree(final List<KdPoint<T>> points) throws KdTreeException {
 		// Make sure at least one point was provided.
 
 		if (points == null || points.isEmpty()) {
 			throw new InvalidKdPointCountException();
 		}
 
-		// Perform a quick dimension count check on the very first point.
-		// All other points are assumed to contain the same number of values for
-		// performance reason.
-
-		final KdPoint<T> testPoint = points.get(0);
-
-		if (testPoint.getDimensions() != dimensionCount) {
-			throw new InvalidKdPointDimensionsException();
-		}
-
-		this.dimensionCount = dimensionCount;
+		this.dimensionCount = points.get(0).getDimensions();
 
 		this.rootNode = buildNode(null, points, 0);
 	}

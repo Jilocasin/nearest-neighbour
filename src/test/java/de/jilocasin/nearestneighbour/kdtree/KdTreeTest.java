@@ -5,11 +5,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.Test;
 
-import de.jilocasin.nearestneighbour.kdtree.exception.InvalidKdPointDimensionsException;
 import de.jilocasin.nearestneighbour.kdtree.exception.InvalidKdPointCountException;
 import de.jilocasin.nearestneighbour.kdtree.generator.RandomDoubleKdTreeGenerator;
 
@@ -30,28 +28,15 @@ public class KdTreeTest {
 	public void testKdTreeWithNoPoints() {
 		// Expected to throw.
 
-		new KdTree<>(4, new ArrayList<>());
-	}
-
-	@Test(expected = InvalidKdPointDimensionsException.class)
-	public void testKdTreeWithWrongPointDimensionCount() {
-		// Use a point with only three axis values for a tree that expects four axis
-		// values. Note that for performance reasons only the dimension count of the
-		// first point is checked during tree setup.
-
-		final List<KdPoint<Integer>> points = new ArrayList<>();
-
-		points.add(new KdPoint<>(1, 2, 3));
-
-		// Expected to throw.
-
-		new KdTree<>(4, points);
+		new KdTree<>(new ArrayList<>());
 	}
 
 	public void testKdTreeWithDimensionCount(final int dimensionCount) {
 		final RandomDoubleKdTreeGenerator treeGenerator = new RandomDoubleKdTreeGenerator();
 
 		final KdTree<Double> tree = treeGenerator.generate(dimensionCount, POINT_COUNT);
+
+		assertEquals(dimensionCount, tree.dimensionCount);
 
 		assertFalse(tree.rootNode.hasParentNode());
 

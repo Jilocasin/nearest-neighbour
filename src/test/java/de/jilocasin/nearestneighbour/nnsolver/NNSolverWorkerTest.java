@@ -10,7 +10,6 @@ import org.junit.Test;
 import de.jilocasin.nearestneighbour.kdtree.KdPoint;
 import de.jilocasin.nearestneighbour.kdtree.KdTree;
 import de.jilocasin.nearestneighbour.kdtree.generator.RandomDoubleKdTreeGenerator;
-import de.jilocasin.nearestneighbour.nnsolver.NNSolverWorker;
 
 public class NNSolverWorkerTest {
 	private static final int POINT_COUNT = 100_000;
@@ -22,7 +21,7 @@ public class NNSolverWorkerTest {
 		final RandomDoubleKdTreeGenerator treeGenerator = new RandomDoubleKdTreeGenerator();
 
 		final List<KdPoint<Double>> inputPoints = treeGenerator.generatePoints(dimensionCount, POINT_COUNT);
-		final KdTree<Double> tree = new KdTree<>(dimensionCount, inputPoints);
+		final KdTree<Double> tree = new KdTree<>(inputPoints);
 
 		final NNSolverWorker<Double> worker = new NNSolverWorker<>(tree, inputPoints);
 
