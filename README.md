@@ -69,7 +69,5 @@ Note that the orchestrator simply returns a new list of points. The index of eac
 This is my first open source repo and there may be issues, there may be bugs, things will catch fire - so bare with me. I will try to use this as a step-by-step example project for future open source work.
 
 ## To-Do
-* Availability on Maven
-* Improve unit test coverage and test cases
-* Perform automated builds/tests to embed the funny green status image (I have to get into this topic first)
+* Make this lib available on Maven
 * Grab a coffee ☕
