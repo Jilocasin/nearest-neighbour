@@ -52,16 +52,16 @@ You should always use a `NNSolverOrchestrator` to get the best performance. It w
 Using an orchestrator is just as easy:
 
 ```java
-int workerThreadsCount = Runtime.getRuntime().availableProcessors();
-
 List<KdPoint<Integer>> searchPoints = new ArrayList<>();
 searchPoints.add(new KdPoint<>(1, 1));
 searchPoints.add(new KdPoint<>(7, 7));
     
-NNSolverOrchestrator<Integer> solverOrchestrator = new NNSolverOrchestrator<>(tree, workerThreadsCount);
+NNSolverOrchestrator<Integer> solverOrchestrator = new NNSolverOrchestrator<>(tree);
 
 List<KdPoint<Integer>> nearestPoints = solverOrchestrator.findNearestPoints(searchPoints);
 ```
+
+This will use an orchestrator instance to distribute the calculation workload to a number of worker threads equal to the number of processor cores available. You can also specify the number of worker threads yourself when creating the NNSolverOrchestrator instance as a second parameter.
 
 Note that the orchestrator simply returns a new list of points. The index of each result point corresponds to the index of the provided search points. So, the nearest point for the first search point will be returned at `nearestPoints.get(0)` etc.
 
@@ -69,7 +69,5 @@ Note that the orchestrator simply returns a new list of points. The index of eac
 This is my first open source repo and there may be issues, there may be bugs, things will catch fire - so bare with me. I will try to use this as a step-by-step example project for future open source work.
 
 ## To-Do
-* Availability on Maven
-* Improve unit test coverage and test cases
-* Perform automated builds/tests to embed the funny green status image (I have to get into this topic first)
+* Make this lib available on Maven
 * Grab a coffee ☕
