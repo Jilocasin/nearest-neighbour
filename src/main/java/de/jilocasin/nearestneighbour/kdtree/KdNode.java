@@ -53,7 +53,7 @@ public class KdNode<T extends Number & Comparable<T>> {
 	}
 
 	public boolean hasChildren() {
-		return leftNode != null && rightNode != null;
+		return leftNode != null || rightNode != null;
 	}
 
 	public int numberOfChildren() {

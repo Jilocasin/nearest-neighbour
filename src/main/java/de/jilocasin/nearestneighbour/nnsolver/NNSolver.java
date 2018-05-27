@@ -1,4 +1,4 @@
-package de.jilocasin.nearestneighbour;
+package de.jilocasin.nearestneighbour.nnsolver;
 
 import de.jilocasin.nearestneighbour.kdtree.KdNode;
 import de.jilocasin.nearestneighbour.kdtree.KdPoint;
@@ -20,6 +20,14 @@ public class NNSolver<T extends Number & Comparable<T>> {
 		this.tree = tree;
 	}
 
+	/**
+	 * <p>
+	 * Returns the nearest tree point to the provided target point.
+	 * </p>
+	 * 
+	 * @param searchTargetPoint
+	 * @return
+	 */
 	public KdPoint<T> findNearestPoint(final KdPoint<T> searchTargetPoint) {
 		this.searchTargetPoint = searchTargetPoint;
 		this.currentBestPoint = null;
@@ -44,38 +52,36 @@ public class NNSolver<T extends Number & Comparable<T>> {
 	}
 
 	private KdNode<T> findLeaf(final KdNode<T> node) {
-		switch (node.numberOfChildren()) {
-		case 0:
-			// If we reached a leaf node, return it.
+		if (node.hasChildren()) {
+			if (node.numberOfChildren() == 1) {
+				// One children. Use the single sub node to continue.
+
+				if (node.hasLeftNode()) {
+					return findLeaf(node.getLeftNode());
+				} else {
+					return findLeaf(node.getRightNode());
+				}
+			} else {
+				// Two children. Decide which sub node to follow.
+
+				final T searchValue = searchTargetPoint.getAxisValue(node.axisIndex);
+				final T nodeValue = node.point.getAxisValue(node.axisIndex);
+
+				// If the axis value of the point we're searching for is greater than the axis
+				// value of node we're looking at, continue with the right sub node.
+
+				if (searchValue.compareTo(nodeValue) > 0) {
+					return findLeaf(node.getRightNode());
+				} else {
+					return findLeaf(node.getLeftNode());
+				}
+			}
+
+		} else {
+			// No children. We reached a leaf node, return it.
 
 			return node;
-
-		case 1:
-			// Use the single child node to continue.
-
-			if (node.hasLeftNode()) {
-				return findLeaf(node.getLeftNode());
-			} else {
-				return findLeaf(node.getRightNode());
-			}
-
-		case 2:
-			// Decide which sub node to follow.
-
-			final T searchValue = searchTargetPoint.values.get(node.axisIndex);
-			final T nodeValue = node.point.values.get(node.axisIndex);
-
-			// If the axis value of the point we're searching for is greater than the axis
-			// value of node we're looking at, continue with the right sub node.
-
-			if (searchValue.compareTo(nodeValue) > 0) {
-				return findLeaf(node.getRightNode());
-			} else {
-				return findLeaf(node.getLeftNode());
-			}
 		}
-
-		return null;
 	}
 
 	/**
@@ -97,7 +103,7 @@ public class NNSolver<T extends Number & Comparable<T>> {
 
 			final double leafDistanceSquared = point.getDistanceSquared(searchTargetPoint);
 
-			if (currentBestPoint == null || leafDistanceSquared < currentBestDistanceSquared) {
+			if (leafDistanceSquared < currentBestDistanceSquared) {
 				currentBestPoint = point;
 				currentBestDistanceSquared = leafDistanceSquared;
 			}
@@ -121,8 +127,8 @@ public class NNSolver<T extends Number & Comparable<T>> {
 			// Simply put, because the final axis is aligned, we can final just compare some
 			// values.
 
-			final double parentPointValue = parentNode.point.values.get(parentNode.axisIndex).doubleValue();
-			final double searchPointValue = searchTargetPoint.values.get(parentNode.axisIndex).doubleValue();
+			final double parentPointValue = parentNode.point.getAxisValue(parentNode.axisIndex).doubleValue();
+			final double searchPointValue = searchTargetPoint.getAxisValue(parentNode.axisIndex).doubleValue();
 
 			final double axisDistance = parentPointValue - searchPointValue;
 

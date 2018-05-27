@@ -12,10 +12,6 @@ public abstract class RandomKdTreeGenerator<T extends Number & Comparable<T>> {
 		return new KdTree<>(dimensionCount, generatePoints(dimensionCount, pointCountt));
 	}
 
-	public KdTree<T> generate(final int dimensionCount, final List<KdPoint<T>> points) {
-		return new KdTree<>(dimensionCount, points);
-	}
-
 	public List<KdPoint<T>> generatePoints(final int dimensionCount, final int pointCount) {
 		final List<KdPoint<T>> points = new ArrayList<>(pointCount);
 

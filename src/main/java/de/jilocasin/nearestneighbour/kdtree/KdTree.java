@@ -4,11 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import de.jilocasin.nearestneighbour.kdtree.exception.InvalidKdPointDimensionsException;
+import de.jilocasin.nearestneighbour.kdtree.exception.InvalidKdPointCountException;
+import de.jilocasin.nearestneighbour.kdtree.exception.KdTreeException;
+
 public class KdTree<T extends Number & Comparable<T>> {
 	/**
-	 * Use 1 % of original points to choose a median approximation.
+	 * Use 1% of all relevant points to choose a median approximation.
 	 */
-	private static final float APPROXIMATION_POINTS_PERCENTAGE = 0.01f;
+	private static final float MEDIAN_APPROXIMATION_POINTS_PERCENTAGE = 0.01f;
 
 	/**
 	 * Random instance used for the median approximation.
@@ -19,10 +23,43 @@ public class KdTree<T extends Number & Comparable<T>> {
 
 	public final KdNode<T> rootNode;
 
-	public KdTree(final int dimensionCount, final List<KdPoint<T>> points) {
+	/**
+	 * Creates a new KdTree instance based on the provided number of dimensions and
+	 * data points.
+	 * 
+	 * @param dimensionCount
+	 *            the number of dimensions of the new tree.
+	 * @param points
+	 *            the points to include in the tree data.
+	 * @throws InvalidKdPointCountException
+	 *             if the provided list of points was null or did not contain at
+	 *             least one point.
+	 * @throws InvalidKdPointDimensionsException
+	 *             if the quick point axis value check fails. The check is only
+	 *             performed for the first point in the provided list and tests
+	 *             whether the number of axis values for this point matches the
+	 *             provided dimension count of the tree.
+	 */
+	public KdTree(final int dimensionCount, final List<KdPoint<T>> points) throws KdTreeException {
+		// Make sure at least one point was provided.
+
+		if (points == null || points.isEmpty()) {
+			throw new InvalidKdPointCountException();
+		}
+
+		// Perform a quick dimension count check on the very first point.
+		// All other points are assumed to contain the same number of values for
+		// performance reason.
+
+		final KdPoint<T> testPoint = points.get(0);
+
+		if (testPoint.getDimensions() != dimensionCount) {
+			throw new InvalidKdPointDimensionsException();
+		}
+
 		this.dimensionCount = dimensionCount;
 
-		rootNode = buildNode(null, points, 0);
+		this.rootNode = buildNode(null, points, 0);
 	}
 
 	/**
@@ -59,7 +96,7 @@ public class KdTree<T extends Number & Comparable<T>> {
 				continue;
 			}
 
-			if (point.values.get(axisIndex).compareTo(medianPoint.values.get(axisIndex)) > 0) {
+			if (point.getAxisValue(axisIndex).compareTo(medianPoint.getAxisValue(axisIndex)) > 0) {
 				rightOfMedian.add(point);
 			} else {
 				leftOfMedian.add(point);
@@ -81,7 +118,7 @@ public class KdTree<T extends Number & Comparable<T>> {
 	 * median of all provided points.
 	 */
 	private KdPoint<T> getFastApproximatedMedianPoint(final List<KdPoint<T>> points, final int axisIndex) {
-		final int numberOfElements = (int) Math.max(points.size() * APPROXIMATION_POINTS_PERCENTAGE, 1);
+		final int numberOfElements = (int) Math.max(points.size() * MEDIAN_APPROXIMATION_POINTS_PERCENTAGE, 1);
 
 		final List<KdPoint<T>> subset = pickRandomSubset(points, numberOfElements);
 
@@ -92,7 +129,7 @@ public class KdTree<T extends Number & Comparable<T>> {
 
 	private final void sortByAxisIndex(final List<KdPoint<T>> points, final int axisIndex) {
 		points.sort((point1, point2) -> {
-			return point1.values.get(axisIndex).compareTo(point2.values.get(axisIndex));
+			return point1.getAxisValue(axisIndex).compareTo(point2.getAxisValue(axisIndex));
 		});
 	};
 

@@ -1,4 +1,4 @@
-package de.jilocasin.nearestneighbour;
+package de.jilocasin.nearestneighbour.nnsolver;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,8 +15,15 @@ public class NNSolverOrchestrator<T extends Number & Comparable<T>> {
 		this.workerThreadsCount = workerThreadsCount;
 	}
 
-	public List<KdPoint<T>> findNearestPoints(final List<KdPoint<T>> inputPoints) {
-		final List<NNSolverWorker<T>> workers = new ArrayList<>();
+	/**
+	 * 
+	 * @param inputPoints
+	 * @return
+	 * @throws NNSolverInterruptedException
+	 *             if the calling thread was interrupted during the async operation.
+	 */
+	public List<KdPoint<T>> findNearestPoints(final List<KdPoint<T>> inputPoints) throws NNSolverInterruptedException {
+		final List<NNSolverWorker<T>> workers = new ArrayList<>(workerThreadsCount);
 
 		final int batchSize = inputPoints.size() / workerThreadsCount;
 
@@ -38,10 +45,16 @@ public class NNSolverOrchestrator<T extends Number & Comparable<T>> {
 
 		// Join the individual workers and append their data.
 
-		final List<KdPoint<T>> resultPoints = new ArrayList<>(inputPoints);
+		final List<KdPoint<T>> resultPoints = new ArrayList<>(inputPoints.size());
 
 		for (final NNSolverWorker<T> worker : workers) {
-			resultPoints.addAll(worker.getResultPoints());
+			try {
+				resultPoints.addAll(worker.getResultPoints());
+			} catch (final InterruptedException e) {
+				// Somebody decided to interrupt this orchestrator call.
+
+				throw new NNSolverInterruptedException(e);
+			}
 		}
 
 		return resultPoints;

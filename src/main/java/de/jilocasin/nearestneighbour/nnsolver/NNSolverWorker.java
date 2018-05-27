@@ -1,4 +1,4 @@
-package de.jilocasin.nearestneighbour;
+package de.jilocasin.nearestneighbour.nnsolver;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,7 @@ public class NNSolverWorker<T extends Number & Comparable<T>> {
 
 	public NNSolverWorker(final KdTree<T> tree, final List<KdPoint<T>> inputPoints) {
 		this.thread = new Thread(() -> {
-			resultPoints = new ArrayList<>(inputPoints);
+			resultPoints = new ArrayList<>(inputPoints.size());
 
 			final NNSolver<T> solver = new NNSolver<>(tree);
 
@@ -32,12 +32,8 @@ public class NNSolverWorker<T extends Number & Comparable<T>> {
 	 * points to the caller. The index of each result point corresponds to the index
 	 * of the input points when constructing this worker.
 	 */
-	public List<KdPoint<T>> getResultPoints() {
-		try {
-			this.thread.join();
-		} catch (final InterruptedException e) {
-			e.printStackTrace();
-		}
+	public List<KdPoint<T>> getResultPoints() throws InterruptedException {
+		this.thread.join();
 
 		return resultPoints;
 	}
