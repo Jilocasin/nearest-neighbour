@@ -1,10 +1,8 @@
-[![Build Status](https://travis-ci.org/Jilocasin/nearest-neighbour.svg?branch=master)](https://travis-ci.org/Jilocasin/nearest-neighbour) [![Coverage Status](https://coveralls.io/repos/github/Jilocasin/nearest-neighbour/badge.svg?branch=master)](https://coveralls.io/github/Jilocasin/nearest-neighbour?branch=master)
-
-# nearest-neighbour
+# nearest-neighbour [![Build Status](https://travis-ci.org/Jilocasin/nearest-neighbour.svg?branch=master)](https://travis-ci.org/Jilocasin/nearest-neighbour) [![Coverage Status](https://coveralls.io/repos/github/Jilocasin/nearest-neighbour/badge.svg)](https://coveralls.io/github/Jilocasin/nearest-neighbour)
 Finding the [nearest neighbour](https://en.wikipedia.org/wiki/Nearest_neighbor_search) of a k-dimensional set of points using an efficient [k-d tree](https://en.wikipedia.org/wiki/K-d_tree) data structure.
 
 ## Installation
-Just download the repository and include the sources in your project.
+Just download the repository and include the sources in your project. I will try to set up a maven repository soon™.
 
 ## Usage
 To search for any nearest neighbours points, you first need to set up a `KdTree` based on a list of `KdPoints`. Both classes use generics to allow any point data payload. Use `Integer`, `Double` or any other class extending `java.lang.Number` and implementing the `Comparable` interface.
@@ -18,11 +16,10 @@ points.add(new KdPoint<>(5, 5));
 points.add(new KdPoint<>(9, 1));
 ```
 
-Now set up a `KdTree` based on those points. Pay attention to the correct dimension value, matching the amount of individual axis values used when creating the points. For performance reason the number of axis values per point is not checked during tree creation.
+Now set up a `KdTree` based on those points. For performance reason, only the first provided point is used to determine the dimension count of the tree. All subsequent points are expected to have the same number of axis values.
 
 ```java
-int dimensions = 2;
-KdTree<Integer> tree = new KdTree<>(dimensions, points);
+KdTree<Integer> tree = new KdTree<>(points);
 ```
 
 To calculate the nearest neighbour of an arbitrary point, use a generic ```NNSolver``` for the used axis type.
