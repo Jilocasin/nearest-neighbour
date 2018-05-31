@@ -5,7 +5,7 @@ Finding the [nearest neighbour](https://en.wikipedia.org/wiki/Nearest_neighbor_s
 Just download the repository and include the sources in your project. I will try to set up a maven repository soon™.
 
 ## Usage
-To search for any nearest neighbours points, you first need to set up a `KdTree` based on a list of `KdPoints`. Both classes use generics to allow any point data payload. Use `Integer`, `Double` or any other class extending `java.lang.Number` and implementing the `Comparable` interface.
+To search for any nearest neighbours points, you first need to set up a `KdTree` based on a list of `KdPoint` objects. Both classes are generic to allow arbitrary point value types. Use an `Integer`, `Double` or any other class extending `java.lang.Number` and implementing `Comparable` for your point values.
 
 Start by setting up a list of k-dimensional points:
 ```java
@@ -27,7 +27,7 @@ To calculate the nearest neighbour of an arbitrary point, use a generic ```NNSol
 NNSolver<Integer> solver = new NNSolver<>(tree);
 		
 KdPoint<Integer> searchPoint = new KdPoint<>(5, 10);
-KdPoint<Integer> nearestOtherPoint = solver.findNearestPoint(searchPoint);
+KdPoint<Integer> nearestPoint = solver.findNearestPoint(searchPoint);
 
 // Returns the point at (5, 8)
 ```
@@ -40,11 +40,12 @@ KdPoint<Integer> nearestOtherPoint = solver.findNearestPoint(searchPoint);
 
 // Returns the nearest point at (5, 5) to this instance,
 // instead of the point instance at (5, 8) we used to search.
-// When provided a new point instance at (5, 8) instead,
-// the closest point would be the original point at (5, 8).
+//
+// If we had provided a new point instance at (5, 8) instead,
+// the returned nearest point would be the original point at (5, 8).
 ```
 
-You should always use a `NNSolverOrchestrator` to get the best performance. It will distribute the workload to a given number of threads. 
+When dealing with larger sets of data, you should always use a `NNSolverOrchestrator` to get the best performance. It will distribute the workload to a given number of threads. 
 
 Using an orchestrator is just as easy:
 
@@ -58,12 +59,14 @@ NNSolverOrchestrator<Integer> solverOrchestrator = new NNSolverOrchestrator<>(tr
 List<KdPoint<Integer>> nearestPoints = solverOrchestrator.findNearestPoints(searchPoints);
 ```
 
-This will use an orchestrator instance to distribute the calculation workload to a number of worker threads equal to the number of processor cores available. You can also specify the number of worker threads yourself when creating the NNSolverOrchestrator instance as a second parameter.
+This will use an orchestrator to distribute the calculation workload to a number of worker threads equal to the number of processor cores available. You can also specify the number of worker threads yourself when creating the NNSolverOrchestrator instance as a second parameter: `new NNSolverOrchestrator<>(tree, numberOfThreads)`.
 
-Note that the orchestrator simply returns a new list of points. The index of each result point corresponds to the index of the provided search points. So, the nearest point for the first search point will be returned at `nearestPoints.get(0)` etc.
+Note that the call to `findNearestPoints` in this case returns a list of points. The index of each result point corresponds to the index of the requested search point. The nearest point to the first search point will be returned at `nearestPoints.get(0)` etc.
 
 ## Note
-This is my first open source repo and there may be issues, there may be bugs, things will catch fire - so bare with me. I will try to use this as a step-by-step example project for future open source work.
+This is my first open source repo and there may be issues, there may be bugs, things will catch fire - so bare with me.
+
+My aim is to use this project as a step-by-step example for my future open source work.
 
 ## To-Do
 * Make this lib available on Maven
