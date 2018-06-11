@@ -19,11 +19,13 @@ points.add(new KdPoint<>(9, 1));
 
 Now set up a `KdTree` based on those points. For performance reason, only the first provided point is used to determine the dimension count of the tree. All subsequent points are expected to have the same number of axis values.
 
+Note that once the tree instance has been set up, no points can be added or removed at a later time. This may be subject for future improvements.
+
 ```java
 KdTree<Integer> tree = new KdTree<>(points);
 ```
 
-To calculate the nearest neighbour of an arbitrary point, use a generic ```NNSolver``` for the used axis type.
+To calculate the nearest neighbour of any arbitrary point, use a ```NNSolver``` for the used axis type.
 ```java
 NNSolver<Integer> solver = new NNSolver<>(tree);
 		
@@ -71,5 +73,6 @@ My aim is to use this project as a step-by-step example for my future open sourc
 
 ## To-Do
 * Use a `KdDistanceCalculator` interface to provide different methods, e.g. [Manhattan distance](https://en.wikipedia.org/wiki/Taxicab_geometry)
+* Allow editing an existing tree by adding or removing points
 * Make this library available on Maven Central
 * Grab a coffee ☕
