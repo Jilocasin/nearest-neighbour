@@ -70,5 +70,6 @@ This is my first open source repo and there may be issues, there may be bugs, th
 My aim is to use this project as a step-by-step example for my future open source work.
 
 ## To-Do
-* Make this lib available on Maven
+* Use a `KdDistanceCalculator` interface to provide different methods, e.g. [Manhattan distance](https://en.wikipedia.org/wiki/Taxicab_geometry)
+* Make this library available on Maven Central
 * Grab a coffee ☕
