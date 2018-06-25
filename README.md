@@ -1,5 +1,5 @@
 # nearest-neighbour [![Build Status](https://travis-ci.org/Jilocasin/nearest-neighbour.svg?branch=master)](https://travis-ci.org/Jilocasin/nearest-neighbour) [![Coverage Status](https://coveralls.io/repos/github/Jilocasin/nearest-neighbour/badge.svg)](https://coveralls.io/github/Jilocasin/nearest-neighbour)
-A small  **Java** library to find the [nearest neighbour](https://en.wikipedia.org/wiki/Nearest_neighbor_search) of a k-dimensional set of points using an efficient [k-d tree](https://en.wikipedia.org/wiki/K-d_tree).
+Small  **Java** library to find the [nearest neighbour](https://en.wikipedia.org/wiki/Nearest_neighbor_search) of a k-dimensional set of points using an efficient [k-d tree](https://en.wikipedia.org/wiki/K-d_tree).
 
 ## Installation
 Just download the repository and include the sources in your project. I will try to set up a maven repository soon™.
@@ -8,7 +8,9 @@ Just download the repository and include the sources in your project. I will try
 To search for any nearest neighbours points, you first need to set up a `KdTree` based on a list of `KdPoint` objects. Both classes allow arbitrary value types like `Integer`, `Double` or any other class derived from `java.lang.Number` and implementing `Comparable`.
 
 ### Show me some code
-Okay. Start by setting up a list of k-dimensional points:
+Alright.
+
+Start by setting up a list of k-dimensional points:
 ```java
 List<KdPoint<Integer>> points = new ArrayList<>();
 
