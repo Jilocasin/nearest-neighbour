@@ -5,10 +5,7 @@ Small  **Java** library to find the [nearest neighbour](https://en.wikipedia.org
 Just download the repository and include the sources in your project. I will try to set up a maven repository soon™.
 
 ## Usage
-To search for any nearest neighbours points, you first need to set up a `KdTree` based on a list of `KdPoint` objects. Both classes allow arbitrary value types like `Integer`, `Double` or any other class derived from `java.lang.Number` and implementing `Comparable`.
-
-### Show me some code
-Alright.
+To search for any nearest neighbours points, you first need to set up a `KdTree` based on a list of `KdPoint` objects. Both classes allow arbitrary value types like `Integer`, `Double` or any other class extending `java.lang.Number` and implementing `Comparable`.
 
 Start by setting up a list of k-dimensional points:
 ```java
